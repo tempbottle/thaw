@@ -13,9 +13,16 @@ pub fn NavCategory(
     let nav_drawer = NavDrawerInjection::expect_context();
     let open = Memo::new(move |_| {
         value.with(|value| {
-            nav_drawer
+            let b1 = nav_drawer
                 .open_categories
-                .with(|open_categories| open_categories.contains(value))
+                .with(|open_categories| open_categories.contains(value));
+            let b2 = nav_drawer.is_selected_category(value);
+            if !b1 && b2 {
+                nav_drawer.open_categories.update(|opens|{
+                    opens.push(value.to_string())
+                });
+            }
+            b1||b2
         })
     });
     let is_selected_category =
