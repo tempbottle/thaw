@@ -12,10 +12,11 @@ pub fn NavCategory(
 ) -> impl IntoView {
     let nav_drawer = NavDrawerInjection::expect_context();
     let open = Memo::new(move |_| {
+        let value = value.get_untracked();
         let b1 = nav_drawer
             .open_categories
-            .with(|open_categories| open_categories.contains(value));
-        let b2 = nav_drawer.is_selected_category(value);
+            .with(|open_categories| open_categories.contains(&value));
+        let b2 = nav_drawer.is_selected_category(&value);
         if !b1 && b2 {
             nav_drawer.open_categories.update(|opens|{
                 opens.push(value.to_string())
